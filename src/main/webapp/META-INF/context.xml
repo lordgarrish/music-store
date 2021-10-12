@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context path="/music-store">
+    <!-- JDBC datasource -->
+    <Resource name="jdbc/musicDB"
+              auth="Container"
+              type="javax.sql.DataSource"
+              username="root"
+              password="cKzSMY5DsKjwZDVw4I4w"
+              driverClassName="com.mysql.cj.jdbc.Driver"
+              url="jdbc:mysql://localhost:3306/music_store_db?autoReconnect=true"
+              logAbandoned="true"
+              removeAbandonedOnBorrow="true"
+              removeAbandonedTimeout="60"
+              maxWaitMillis="10000"/>
+</Context>
