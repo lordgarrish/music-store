@@ -5,6 +5,7 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 import java.sql.*;
 
+//Utility class that creates pool of connections to DB
 public class ConnectionPool {
     private static ConnectionPool pool = null;
     private static DataSource dataSource = null;
@@ -18,6 +19,7 @@ public class ConnectionPool {
         }
     }
 
+    //Singleton instance of ConnectionPool
     public static synchronized ConnectionPool getInstance() {
         if (pool == null) {
             pool = new ConnectionPool();

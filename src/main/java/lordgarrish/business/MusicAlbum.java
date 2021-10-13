@@ -2,6 +2,7 @@ package lordgarrish.business;
 
 import java.io.Serializable;
 
+//Java Bean class representing single album
 public class MusicAlbum implements Serializable {
 
     private Long productId;

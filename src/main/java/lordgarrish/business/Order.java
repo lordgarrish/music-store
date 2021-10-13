@@ -2,10 +2,11 @@ package lordgarrish.business;
 
 import java.io.Serializable;
 
+//Java Bean class representing customer's order
 public class Order implements Serializable {
 
     private String orderID;
-    private Cart cart;
+    private Cart cart; //Every order has its own cart of items
 
     public Order() {}
 

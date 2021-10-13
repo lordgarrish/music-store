@@ -16,6 +16,9 @@ import java.time.format.DateTimeFormatter;
 
 @WebServlet("/checkout")
 public class CheckoutServlet extends HttpServlet {
+    //This servlet does various actions like adding user's info and credit card to the database and also creates
+    //Order object and adds to the database as well. Sorry for spaghetti code, I'm looking forward to doing it more
+    //concise
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -25,7 +28,7 @@ public class CheckoutServlet extends HttpServlet {
         if (action == null)
             action = "add";
 
-        String url = "/checkout.jsp";
+        String url;
         if(action.equals("edit")) {
             url = "/checkout.jsp";
             sc.getRequestDispatcher(url).forward(req, resp);
@@ -98,6 +101,7 @@ public class CheckoutServlet extends HttpServlet {
         }
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMddHHmm");
+        //Makes order id from customer's last name, current date and a random number from 0 to 99
         String orderID = customer.getLastName() + "_" + now.format(formatter)+ "_" + (int) (Math.random() * 100);
         Order order = (Order) session.getAttribute("order");
         if(order == null || order.isEmptyOrder()) {

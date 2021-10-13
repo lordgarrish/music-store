@@ -5,6 +5,7 @@ import lordgarrish.business.*;
 import java.util.*;
 import java.sql.*;
 
+//Data access class for adding customers, credit cards and orders to the database
 public class CustomerDB {
 
     public static void addCustomer(Customer customer) {
@@ -60,6 +61,7 @@ public class CustomerDB {
         String ordersQuery = "INSERT INTO orders (order_id, customer_id) " +
                 "VALUES (?, (SELECT customer_id FROM customers WHERE email = ?))";
 
+        //Insert order in 'orders' table
         try(Connection connection = pool.getConnection()) {
             PreparedStatement stat = connection.prepareStatement(ordersQuery);
             stat.setString(1, order.getOrderID());
@@ -87,6 +89,7 @@ public class CustomerDB {
         builder.deleteCharAt(builder.length() - 1);
         String itemsQuery = builder.toString();
 
+        //Insert order's items in 'orders_items' table (join table bc it's many-to-many relationship)
         try(Connection connection = pool.getConnection()) {
             PreparedStatement stat = connection.prepareStatement(itemsQuery);
             int r = stat.executeUpdate();

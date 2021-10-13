@@ -16,13 +16,10 @@ public class CatalogServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        PrintWriter out = resp.getWriter();
-//        out.println("TEST CatalogServlet");
-
+        //Displays product info on product page
         String requestURI = req.getRequestURI();
         String url = "/product_page.jsp";
         String productCode = requestURI.substring(requestURI.lastIndexOf('/') + 1);
-        //out.println(productCode);
         MusicAlbum album = AlbumDB.selectAlbum(productCode);
 
         if(album == null) {

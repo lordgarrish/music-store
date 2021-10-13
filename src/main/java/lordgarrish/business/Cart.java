@@ -4,8 +4,10 @@ import java.io.*;
 import java.text.DecimalFormat;
 import java.util.*;
 
+//Java Bean class representing customer's cart
 public class Cart implements Serializable {
 
+    //List of items in cart
     private final List<LineItem> items;
 
     public Cart() {

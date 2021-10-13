@@ -2,9 +2,11 @@ package lordgarrish.business;
 
 import java.io.Serializable;
 
+//Java Bean class representing item in cart
 public class LineItem implements Serializable {
+
     private MusicAlbum album;
-    private int quantity;
+    private int quantity; //total quantity
 
     public LineItem() {
     }

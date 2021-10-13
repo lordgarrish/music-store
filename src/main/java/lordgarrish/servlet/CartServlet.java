@@ -17,8 +17,6 @@ public class CartServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-//        PrintWriter out = resp.getWriter();
-//        out.println("CartServlet TEST");
         String url = "/cart.jsp";
         HttpSession session = req.getSession();
         Cart cart = (Cart) session.getAttribute("cart");
@@ -38,8 +36,9 @@ public class CartServlet extends HttpServlet {
 
         String url = "/catalog.jsp";
         if (action.equals("shop")) url = "/catalog.jsp";
-        else if (action.equals("cart")) {
+        else if (action.equals("cart")) { //Code in this statement creates Cart object and adds or removes products from it
             String productCode = request.getParameter("productCode");
+            //Get quantity from cart page
             String quantityString = request.getParameter("quantity");
 
             HttpSession session = request.getSession();
@@ -55,14 +54,15 @@ public class CartServlet extends HttpServlet {
                 quantity = 1;
             }
 
+            //Get MusicAlbum object from DB
             MusicAlbum album = AlbumDB.selectAlbum(productCode);
 
             LineItem lineItem = new LineItem();
-            lineItem.setAlbum(album);
+            lineItem.setAlbum(album); //Wrap album in LineItem object
             lineItem.setQuantity(quantity);
             if (quantity > 0) {
                 cart.addItem(lineItem);
-            } else if (quantity == 0) {
+            } else {
                 cart.removeItem(lineItem);
             }
 

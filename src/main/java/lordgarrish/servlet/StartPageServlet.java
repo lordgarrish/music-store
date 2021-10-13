@@ -12,7 +12,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet(urlPatterns = {"/catalog", "/info", "/news"})
+@WebServlet(urlPatterns = {"/catalog", "/news"})
 public class StartPageServlet extends HttpServlet {
 
     @Override
@@ -20,11 +20,12 @@ public class StartPageServlet extends HttpServlet {
         String requestURI = req.getRequestURI();
         String url;
 
-        //System.out.println(requestURI);
         if(requestURI.endsWith("catalog")) {
             url = showCatalog(req, resp);
         }
-        else {
+        else if(requestURI.endsWith("news")){
+            url = "/404.jsp"; //News page in development
+        } else {
             url = "/404.jsp";
         }
 
@@ -32,8 +33,10 @@ public class StartPageServlet extends HttpServlet {
     }
 
     private String showCatalog(HttpServletRequest req, HttpServletResponse resp) {
+        //Shows store catalog on '/catalog' page
         String url = "/catalog.jsp";
 
+        //Get albums from DB
         List<MusicAlbum> albumsList = AlbumDB.selectAlbums();
         HttpSession session = req.getSession();
         session.setAttribute("albums", albumsList);

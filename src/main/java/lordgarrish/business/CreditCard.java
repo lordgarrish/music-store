@@ -2,6 +2,7 @@ package lordgarrish.business;
 
 import java.io.Serializable;
 
+//Java Bean class representing customer's credit cart
 public class CreditCard implements Serializable {
 
     private String creditCardNumber;

@@ -2,6 +2,7 @@ package lordgarrish.business;
 
 import java.io.*;
 
+//Java Bean class representing customer
 public class Customer implements Serializable {
 
     private String firstName;

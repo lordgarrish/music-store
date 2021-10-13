@@ -5,8 +5,10 @@ import lordgarrish.business.*;
 import java.util.*;
 import java.sql.*;
 
+//Data access class for getting albums objects from database
 public class AlbumDB {
 
+    //Get album by its code
     public static MusicAlbum selectAlbum(String productCode) {
         ConnectionPool pool = ConnectionPool.getInstance();
 
@@ -39,6 +41,7 @@ public class AlbumDB {
         }
     }
 
+    //Get all albums
     public static List<MusicAlbum> selectAlbums() {
         ConnectionPool pool = ConnectionPool.getInstance();
 

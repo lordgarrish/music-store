@@ -16,6 +16,7 @@ public class OrderServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        //Displays order info
         String url = "/order_info.jsp";
         ServletContext sc = getServletContext();
         HttpSession session = req.getSession();
