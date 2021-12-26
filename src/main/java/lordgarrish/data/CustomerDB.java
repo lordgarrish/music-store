@@ -61,18 +61,30 @@ public class CustomerDB {
         String ordersQuery = "INSERT INTO orders (order_id, customer_id) " +
                 "VALUES (?, (SELECT customer_id FROM customers WHERE email = ?))";
 
-        //Insert order in 'orders' table
+        //Get query for 'orders_items' join table
+        String ordersItemsQuery = createOrdersItemsQuery(order);
+
+        //Insert order into 'orders' table and order's items in 'orders_items' table
+        //(join table bc it's many-to-many relationship)
         try(Connection connection = pool.getConnection()) {
+            connection.setAutoCommit(false);
             PreparedStatement stat = connection.prepareStatement(ordersQuery);
             stat.setString(1, order.getOrderID());
             stat.setString(2, customer.getEmail());
-            int r = stat.executeUpdate();
-            System.out.println(r + " row(s) inserted in 'orders' table");
+            int r1 = stat.executeUpdate();
+            stat = connection.prepareStatement(ordersItemsQuery);
+            int r2 = stat.executeUpdate();
+            connection.commit();
+            System.out.println(r1 + " row(s) inserted in 'orders' table");
+            System.out.println(r2 + " row(s) inserted in 'orders_items' table");
         } catch (SQLException throwables) {
-            System.err.println("Cant add order to DB");
+            System.err.println("Cant add orders and albums id's to DB");
             throwables.printStackTrace();
         }
+    }
 
+    //Constructs query for 'orders_items' join table
+    private static String createOrdersItemsQuery(Order order) {
         String head = "INSERT INTO orders_items (order_id, album_id, quantity) VALUES ";
         Cart cart = order.getCart();
         List<LineItem> items = cart.getItems();
@@ -87,17 +99,6 @@ public class CustomerDB {
             builder.append(subquery);
         }
         builder.deleteCharAt(builder.length() - 1);
-        String itemsQuery = builder.toString();
-
-        //Insert order's items in 'orders_items' table (join table bc it's many-to-many relationship)
-        try(Connection connection = pool.getConnection()) {
-            PreparedStatement stat = connection.prepareStatement(itemsQuery);
-            int r = stat.executeUpdate();
-            System.out.println(r + " row(s) inserted in 'orders_items' table");
-        } catch (SQLException throwables) {
-            System.err.println("Cant add orders and albums id's to DB");
-            throwables.printStackTrace();
-        }
-
+        return builder.toString();
     }
 }

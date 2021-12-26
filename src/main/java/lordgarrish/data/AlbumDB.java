@@ -22,19 +22,7 @@ public class AlbumDB {
             PreparedStatement stat = connection.prepareStatement(query);
             stat.setString(1, productCode);
             ResultSet resultSet = stat.executeQuery();
-            MusicAlbum album = new MusicAlbum();
-            if(resultSet.next()) {
-                album.setCode(resultSet.getString("code"));
-                album.setTitle(resultSet.getString("title"));
-                album.setArtist(resultSet.getString("artist"));
-                album.setYear(resultSet.getInt("year"));
-                album.setDescription(resultSet.getString("description"));
-                album.setGenre(resultSet.getString("genre"));
-                album.setPrice(resultSet.getDouble("price"));
-            } else {
-                return null;
-            }
-            return album;
+            return resultSet.next() ? createAlbum(resultSet) : null;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
             return null;
@@ -55,14 +43,7 @@ public class AlbumDB {
             ResultSet resultSet = stat.executeQuery();
             List<MusicAlbum> musicAlbums = new ArrayList<>();
             while(resultSet.next()) {
-                MusicAlbum album = new MusicAlbum();
-                album.setCode(resultSet.getString("code"));
-                album.setTitle(resultSet.getString("title"));
-                album.setArtist(resultSet.getString("artist"));
-                album.setYear(resultSet.getInt("year"));
-                album.setDescription(resultSet.getString("description"));
-                album.setGenre(resultSet.getString("genre"));
-                album.setPrice(resultSet.getDouble("price"));
+                MusicAlbum album = createAlbum(resultSet);
                 musicAlbums.add(album);
             }
             return musicAlbums;
@@ -70,5 +51,17 @@ public class AlbumDB {
             throwables.printStackTrace();
             return null;
         }
+    }
+
+    private static MusicAlbum createAlbum(ResultSet resultSet) throws SQLException {
+        MusicAlbum album = new MusicAlbum();
+        album.setCode(resultSet.getString("code"));
+        album.setTitle(resultSet.getString("title"));
+        album.setArtist(resultSet.getString("artist"));
+        album.setYear(resultSet.getInt("year"));
+        album.setDescription(resultSet.getString("description"));
+        album.setGenre(resultSet.getString("genre"));
+        album.setPrice(resultSet.getDouble("price"));
+        return album;
     }
 }

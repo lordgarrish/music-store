@@ -21,7 +21,7 @@ public class StartPageServlet extends HttpServlet {
         String url;
 
         if(requestURI.endsWith("catalog")) {
-            url = showCatalog(req, resp);
+            url = showCatalog(req);
         }
         else if(requestURI.endsWith("news")){
             url = "/404.jsp"; //News page in development
@@ -32,8 +32,8 @@ public class StartPageServlet extends HttpServlet {
         getServletContext().getRequestDispatcher(url).forward(req, resp);
     }
 
-    private String showCatalog(HttpServletRequest req, HttpServletResponse resp) {
-        //Shows store catalog on '/catalog' page
+    //Shows store catalog on '/catalog' page
+    private String showCatalog(HttpServletRequest req) {
         String url = "/catalog.jsp";
 
         //Get albums from DB

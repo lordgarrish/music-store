@@ -34,7 +34,7 @@ public class CheckoutServlet extends HttpServlet {
             sc.getRequestDispatcher(url).forward(req, resp);
         }
         else if(action.equals("add")) {
-            url = createCustomer(req, resp);
+            url = createCustomer(req);
             sc.getRequestDispatcher(url).forward(req, resp);
         }
         else if(action.equals("confirm")) {
@@ -42,12 +42,12 @@ public class CheckoutServlet extends HttpServlet {
             sc.getRequestDispatcher(url).forward(req, resp);
         }
         else if(action.equals("addCard")) {
-            url = createOrder(req, resp);
+            url = createOrder(req);
             resp.sendRedirect(url);
         }
     }
 
-    private String createCustomer(HttpServletRequest req, HttpServletResponse resp) {
+    private String createCustomer(HttpServletRequest req) {
         String firstName = req.getParameter("firstName");
         String lastName = req.getParameter("lastName");
         String email = req.getParameter("email");
@@ -78,7 +78,7 @@ public class CheckoutServlet extends HttpServlet {
         return "/confirm.jsp";
     }
 
-    private String createOrder(HttpServletRequest req, HttpServletResponse resp) {
+    private String createOrder(HttpServletRequest req) {
         String creditCardNumber = req.getParameter("creditCardNumber");
         String creditCardExpirationDate = req.getParameter("creditCardExpirationDate");
         String cvv = req.getParameter("cvv");
