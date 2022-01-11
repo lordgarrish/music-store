@@ -52,6 +52,10 @@ public class Cart implements Serializable {
         return decFormat.format(totalPrice);
     }
 
+    public void removeAllItemsFromCart() {
+        items.clear();
+    }
+
     public int getCount() {
         return items.size();
     }
