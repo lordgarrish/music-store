@@ -18,10 +18,6 @@ public class Cart implements Serializable {
         return items;
     }
 
-    public int getCount() {
-        return items.size();
-    }
-
     public void addItem(LineItem item) {
         String code = item.getAlbum().getCode();
         int quantity = item.getQuantity();
@@ -54,6 +50,10 @@ public class Cart implements Serializable {
         DecimalFormat decFormat = new DecimalFormat();
         decFormat.setMaximumFractionDigits(2);
         return decFormat.format(totalPrice);
+    }
+
+    public int getCount() {
+        return items.size();
     }
 
     public boolean isEmptyCart() {

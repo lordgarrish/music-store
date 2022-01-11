@@ -9,6 +9,14 @@ public class CreditCard implements Serializable {
     private String creditCardExpirationDate;
     private String cvv;
 
+    public CreditCard() {}
+
+    public CreditCard(String creditCardNumber, String creditCardExpirationDate, String cvv) {
+        this.creditCardNumber = creditCardNumber;
+        this.creditCardExpirationDate = creditCardExpirationDate;
+        this.cvv = cvv;
+    }
+
     public String getCreditCardNumber() {
         return creditCardNumber;
     }

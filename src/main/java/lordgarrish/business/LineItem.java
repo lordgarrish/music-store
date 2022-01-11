@@ -8,7 +8,11 @@ public class LineItem implements Serializable {
     private MusicAlbum album;
     private int quantity; //total quantity
 
-    public LineItem() {
+    public LineItem() {}
+
+    public LineItem(MusicAlbum album, int quantity) {
+        this.album = album;
+        this.quantity = quantity;
     }
 
     public MusicAlbum getAlbum() {

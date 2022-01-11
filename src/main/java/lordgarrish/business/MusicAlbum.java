@@ -16,12 +16,18 @@ public class MusicAlbum implements Serializable {
 
     public MusicAlbum() {}
 
-    public Long getProductId() {
-        return productId;
+    public MusicAlbum(String code, String title, String artist, String genre, int year, String description, double price) {
+        this.code = code;
+        this.title = title;
+        this.artist = artist;
+        this.genre = genre;
+        this.year = year;
+        this.description = description;
+        this.price = price;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
+    public Long getProductId() {
+        return productId;
     }
 
     public String getCode() {
