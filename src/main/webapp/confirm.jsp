@@ -11,11 +11,11 @@
         <p><b>Last Name: </b><c:out value="${customer.lastName}"/></p>
         <p><b>Email: </b><c:out value="${customer.email}"/></p>
         <p><b>Phone Number: </b><c:out value="${customer.phoneNumber}"/></p>
-        <p><b>Address: </b><c:out value="${customer.address}"/></p>
-        <p><b>City: </b><c:out value="${customer.city}"/></p>
-        <p><b>State: </b><c:out value="${customer.state}"/></p>
-        <p><b>ZIP: </b><c:out value="${customer.zip}"/></p>
-        <p><b>Country: </b><c:out value="${customer.country}"/></p>
+        <p><b>Address: </b><c:out value="${customer.address.address}"/></p>
+        <p><b>City: </b><c:out value="${customer.address.city}"/></p>
+        <p><b>State: </b><c:out value="${customer.address.state}"/></p>
+        <p><b>ZIP: </b><c:out value="${customer.address.zip}"/></p>
+        <p><b>Country: </b><c:out value="${customer.address.country}"/></p>
 
         <form action="" method="post">
             <input type="hidden" name="action" value="edit">

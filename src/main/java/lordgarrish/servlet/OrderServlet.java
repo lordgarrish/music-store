@@ -25,6 +25,9 @@ public class OrderServlet extends HttpServlet {
             order = new Order();
         }
         session.setAttribute("order", order);
+        Cart cart = (Cart) session.getAttribute("cart");
+        cart.removeAllItemsFromCart();
+        session.setAttribute("cart", cart);
         sc.getRequestDispatcher(url).forward(req, resp);
     }
 

@@ -20,7 +20,7 @@
                             <th>Quantity</th>
                             <th>Total</th>
                         </tr>
-                        <c:forEach var="item" items="${cart.items}">
+                        <c:forEach var="item" items="${order.items}">
                             <tr>
                                 <td><c:out value='${item.album.artist}'/> - <c:out value='${item.album.title}'/></td>
                                 <td>$<c:out value="${item.album.price}"/></td>
@@ -36,11 +36,11 @@
                 <b> Last Name: </b><c:out value="${customer.lastName}"/></p>
                 <p><b>Email: </b><c:out value="${customer.email}"/>
                 <b> Phone Number: </b><c:out value="${customer.phoneNumber}"/></p>
-                <p><b>Address: </b><c:out value="${customer.address}"/></p>
-                <p><b>City: </b><c:out value="${customer.city}"/>
-                <b> State: </b><c:out value="${customer.state}"/>
-                <b> ZIP: </b><c:out value="${customer.zip}"/></p>
-                <p><b>Country: </b><c:out value="${customer.country}"/></p>
+                <p><b>Address: </b><c:out value="${customer.address.address}"/></p>
+                <p><b>City: </b><c:out value="${customer.address.city}"/>
+                <b> State: </b><c:out value="${customer.address.state}"/>
+                <b> ZIP: </b><c:out value="${customer.address.zip}"/></p>
+                <p><b>Country: </b><c:out value="${customer.address.country}"/></p>
             </c:otherwise>
         </c:choose>
     </div>

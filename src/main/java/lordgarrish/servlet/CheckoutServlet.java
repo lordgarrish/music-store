@@ -16,9 +16,8 @@ import java.time.format.DateTimeFormatter;
 
 @WebServlet("/checkout")
 public class CheckoutServlet extends HttpServlet {
-    //This servlet does various actions like adding user's info and credit card to the database and also creates
-    //Order object and adds to the database as well. Sorry for spaghetti code, I'm looking forward to doing it more
-    //concise
+    //This servlet does various actions like adding user's info and credit card to the database and creating
+    //Order object and adding it to the database as well.
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -57,6 +56,7 @@ public class CheckoutServlet extends HttpServlet {
         String state = req.getParameter("state");
         String zip = req.getParameter("zip");
         String country = req.getParameter("country");
+        Address userAddress = new Address(address, city, state, zip, country);
 
         HttpSession session = req.getSession();
         Customer customer = (Customer) session.getAttribute("customer");
@@ -67,11 +67,7 @@ public class CheckoutServlet extends HttpServlet {
         customer.setLastName(lastName);
         customer.setEmail(email);
         customer.setPhoneNumber(phoneNumber);
-        customer.setAddress(address);
-        customer.setCity(city);
-        customer.setState(state);
-        customer.setZip(zip);
-        customer.setCountry(country);
+        customer.setAddress(userAddress);
 
         session.setAttribute("customer", customer);
 
@@ -86,7 +82,7 @@ public class CheckoutServlet extends HttpServlet {
         HttpSession session = req.getSession();
         Customer customer = (Customer) session.getAttribute("customer");
         if(customer == null) {
-            System.err.println("Customer not found in 'createOrder' method");
+            System.err.println("Customer not found in current session");
             return "/error_page.jsp";
         }
         CreditCard card = new CreditCard();
@@ -96,7 +92,7 @@ public class CheckoutServlet extends HttpServlet {
 
         Cart cart = (Cart) session.getAttribute("cart");
         if(cart == null) {
-            System.err.println("Cart not found in 'createOrder' method");
+            System.err.println("Cart not found in current session");
             return "/error_page.jsp";
         }
         LocalDateTime now = LocalDateTime.now();

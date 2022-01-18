@@ -1,18 +1,19 @@
 package lordgarrish.business;
 
 import java.io.Serializable;
+import java.util.*;
 
 //Java Bean class representing customer's order
 public class Order implements Serializable {
 
     private String orderID;
-    private Cart cart; //Every order has its own cart of items
+    private final List<LineItem> items;
 
-    public Order() {}
+    public Order() { items = new ArrayList<>(); }
 
     public Order(String orderID, Cart cart) {
         this.orderID = orderID;
-        this.cart = cart;
+        items = new ArrayList<>(cart.getItems());
     }
 
     public String getOrderID() {
@@ -23,15 +24,11 @@ public class Order implements Serializable {
         this.orderID = orderID;
     }
 
-    public Cart getCart() {
-        return cart;
-    }
-
-    public void setCart(Cart cart) {
-        this.cart = cart;
+    public List<LineItem> getItems() {
+        return items;
     }
 
     public boolean isEmptyOrder() {
-        return cart == null || cart.isEmptyCart();
+        return items.isEmpty();
     }
 }

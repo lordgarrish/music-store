@@ -5,7 +5,6 @@ import java.io.Serializable;
 //Java Bean class representing single album
 public class MusicAlbum implements Serializable {
 
-    private Long productId;
     private String code;
     private String title;
     private String artist;
@@ -24,10 +23,6 @@ public class MusicAlbum implements Serializable {
         this.year = year;
         this.description = description;
         this.price = price;
-    }
-
-    public Long getProductId() {
-        return productId;
     }
 
     public String getCode() {

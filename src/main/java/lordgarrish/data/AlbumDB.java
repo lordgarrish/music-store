@@ -23,8 +23,9 @@ public class AlbumDB {
             stat.setString(1, productCode);
             ResultSet resultSet = stat.executeQuery();
             return resultSet.next() ? createAlbum(resultSet) : null;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Can't get album " + productCode + " from DB");
             return null;
         }
     }
@@ -47,8 +48,9 @@ public class AlbumDB {
                 musicAlbums.add(album);
             }
             return musicAlbums;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.err.println("Can't get albums from DB");
             return null;
         }
     }

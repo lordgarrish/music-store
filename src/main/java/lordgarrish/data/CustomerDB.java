@@ -10,6 +10,7 @@ public class CustomerDB {
 
     public static void addCustomer(Customer customer) {
         ConnectionPool pool = ConnectionPool.getInstance();
+        Address userAddress = customer.getAddress();
 
         String query = "INSERT INTO customers (first_name, last_name, email, address, city, state, zip, country, phone_number) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -19,11 +20,11 @@ public class CustomerDB {
             stat.setString(1, customer.getFirstName());
             stat.setString(2, customer.getLastName());
             stat.setString(3, customer.getEmail());
-            stat.setString(4, customer.getAddress());
-            stat.setString(5, customer.getCity());
-            stat.setString(6, customer.getState());
-            stat.setString(7, customer.getZip());
-            stat.setString(8, customer.getCountry());
+            stat.setString(4, userAddress.getAddress());
+            stat.setString(5, userAddress.getCity());
+            stat.setString(6, userAddress.getState());
+            stat.setString(7, userAddress.getZip());
+            stat.setString(8, userAddress.getCountry());
             stat.setString(9, customer.getPhoneNumber());
             int r = stat.executeUpdate();
             System.out.println(r + " row(s) inserted in 'customers' table");
@@ -86,8 +87,7 @@ public class CustomerDB {
     //Constructs query for 'orders_items' join table
     private static String createOrdersItemsQuery(Order order) {
         String head = "INSERT INTO orders_items (order_id, album_id, quantity) VALUES ";
-        Cart cart = order.getCart();
-        List<LineItem> items = cart.getItems();
+        List<LineItem> items = order.getItems();
         String orderID = order.getOrderID();
         StringBuilder builder = new StringBuilder(head);
         for(LineItem item : items) {
