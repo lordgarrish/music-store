@@ -15,7 +15,7 @@ public class Cart implements Serializable {
     }
 
     public List<LineItem> getItems() {
-        return items;
+        return new ArrayList<>(items);
     }
 
     public void addItem(LineItem item) {

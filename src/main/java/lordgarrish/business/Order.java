@@ -1,6 +1,7 @@
 package lordgarrish.business;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.*;
 
 //Java Bean class representing customer's order
@@ -13,7 +14,7 @@ public class Order implements Serializable {
 
     public Order(String orderID, Cart cart) {
         this.orderID = orderID;
-        items = new ArrayList<>(cart.getItems());
+        items = cart.getItems();
     }
 
     public String getOrderID() {
@@ -30,5 +31,15 @@ public class Order implements Serializable {
 
     public boolean isEmptyOrder() {
         return items.isEmpty();
+    }
+
+    public String getTotalPrice() {
+        double totalPrice = 0.0;
+        for(LineItem item : items) {
+            totalPrice += item.getTotal();
+        }
+        DecimalFormat decFormat = new DecimalFormat();
+        decFormat.setMaximumFractionDigits(2);
+        return decFormat.format(totalPrice);
     }
 }

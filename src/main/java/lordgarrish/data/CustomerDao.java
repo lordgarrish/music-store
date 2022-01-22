@@ -2,21 +2,59 @@ package lordgarrish.data;
 
 import lordgarrish.business.*;
 
-import java.util.*;
 import java.sql.*;
+import java.util.*;
 
-//Data access class for adding customers, credit cards and orders to the database
-public class CustomerDB {
+public class CustomerDao implements AbstractDao<Customer, String> {
+    private static AbstractDao<Customer, String> customerDao;
 
-    public static void addCustomer(Customer customer) {
+    private CustomerDao() {}
+
+    public static synchronized AbstractDao<Customer, String> getInstance() {
+        if(customerDao == null) {
+            customerDao = new CustomerDao();
+        }
+        return customerDao;
+    }
+
+    @Override
+    public boolean save(Customer customer) throws SQLException {
         ConnectionPool pool = ConnectionPool.getInstance();
+        try(Connection connection = pool.getConnection()) {
+            this.addCustomer(customer, connection);
+            this.addCreditCard(customer, connection);
+            this.addOrder(customer, connection);
+        }
+        return true;
+    }
+
+    @Override
+    public Customer update(Customer customer) throws SQLException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public boolean delete(String id) throws SQLException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public List<Customer> getAll() throws SQLException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    @Override
+    public Customer getById(String id) throws SQLException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    private void addCustomer(Customer customer, Connection connection) throws SQLException {
         Address userAddress = customer.getAddress();
 
         String query = "INSERT INTO customers (first_name, last_name, email, address, city, state, zip, country, phone_number) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try(Connection connection = pool.getConnection()) {
-            PreparedStatement stat = connection.prepareStatement(query);
+        try(PreparedStatement stat = connection.prepareStatement(query)) {
             stat.setString(1, customer.getFirstName());
             stat.setString(2, customer.getLastName());
             stat.setString(3, customer.getEmail());
@@ -28,20 +66,14 @@ public class CustomerDB {
             stat.setString(9, customer.getPhoneNumber());
             int r = stat.executeUpdate();
             System.out.println(r + " row(s) inserted in 'customers' table");
-        } catch (SQLException throwables) {
-            System.err.println("Cant add user to DB");
-            throwables.printStackTrace();
         }
     }
 
-    public static void addCreditCard(Customer customer) {
-        ConnectionPool pool = ConnectionPool.getInstance();
-
+    private void addCreditCard(Customer customer, Connection connection) throws SQLException {
         String query = "INSERT INTO credit_cards (credit_card_number, credit_card_expiration_date, cvv, customer_id) " +
                 "VALUES (?, ?, ?, (SELECT customer_id FROM customers WHERE email = ?))";
 
-        try(Connection connection = pool.getConnection()) {
-            PreparedStatement stat = connection.prepareStatement(query);
+        try(PreparedStatement stat = connection.prepareStatement(query)) {
             CreditCard card = customer.getCreditCard();
             stat.setString(1, card.getCreditCardNumber());
             stat.setString(2, card.getCreditCardExpirationDate());
@@ -49,43 +81,35 @@ public class CustomerDB {
             stat.setString(4, customer.getEmail());
             int r = stat.executeUpdate();
             System.out.println(r + " row(s) inserted in 'credit_cards' table");
-        } catch (SQLException throwables) {
-            System.err.println("Cant add credit card to DB");
-            throwables.printStackTrace();
         }
     }
 
-    public static void addOrder(Customer customer) {
-        ConnectionPool pool = ConnectionPool.getInstance();
+    private void addOrder(Customer customer, Connection connection) throws SQLException {
         Order order = customer.getOrder();
-
         String ordersQuery = "INSERT INTO orders (order_id, customer_id) " +
                 "VALUES (?, (SELECT customer_id FROM customers WHERE email = ?))";
-
         //Get query for 'orders_items' join table
-        String ordersItemsQuery = createOrdersItemsQuery(order);
+        String ordersItemsQuery = this.createOrdersItemsQuery(order);
 
         //Insert order into 'orders' table and order's items in 'orders_items' table
         //(join table bc it's many-to-many relationship)
-        try(Connection connection = pool.getConnection()) {
-            connection.setAutoCommit(false);
-            PreparedStatement stat = connection.prepareStatement(ordersQuery);
+        int r1, r2;
+        connection.setAutoCommit(false);
+        try(PreparedStatement stat = connection.prepareStatement(ordersQuery)) {
             stat.setString(1, order.getOrderID());
             stat.setString(2, customer.getEmail());
-            int r1 = stat.executeUpdate();
-            stat = connection.prepareStatement(ordersItemsQuery);
-            int r2 = stat.executeUpdate();
-            connection.commit();
-            System.out.println(r1 + " row(s) inserted in 'orders' table");
-            System.out.println(r2 + " row(s) inserted in 'orders_items' table");
-        } catch (SQLException throwables) {
-            System.err.println("Cant add orders and albums id's to DB");
-            throwables.printStackTrace();
+            r1 = stat.executeUpdate();
         }
+        try(PreparedStatement stat = connection.prepareStatement(ordersItemsQuery)) {
+            r2 = stat.executeUpdate();
+        }
+        connection.commit();
+        System.out.println(r1 + " row(s) inserted in 'orders' table");
+        System.out.println(r2 + " row(s) inserted in 'orders_items' table");
     }
 
     //Constructs query for 'orders_items' join table
-    private static String createOrdersItemsQuery(Order order) {
+    private String createOrdersItemsQuery(Order order) {
         String head = "INSERT INTO orders_items (order_id, album_id, quantity) VALUES ";
         List<LineItem> items = order.getItems();
         String orderID = order.getOrderID();

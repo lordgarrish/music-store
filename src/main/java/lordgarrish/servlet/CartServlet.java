@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.sql.SQLException;
 
 @WebServlet("/cart")
 public class CartServlet extends HttpServlet {
@@ -36,7 +37,9 @@ public class CartServlet extends HttpServlet {
 
         String url = "/catalog.jsp";
         if (action.equals("shop")) url = "/catalog.jsp";
-        else if (action.equals("cart")) { //Code in this statement creates Cart object and adds or removes products from it
+
+        //Create Cart object and add or remove products from it
+        else if (action.equals("cart")) {
             String productCode = request.getParameter("productCode");
             //Get quantity from cart page
             String quantityString = request.getParameter("quantity");
@@ -54,8 +57,14 @@ public class CartServlet extends HttpServlet {
                 quantity = 1;
             }
 
-            //Get MusicAlbum object from DB
-            MusicAlbum album = AlbumDB.selectAlbum(productCode);
+            AbstractDao<MusicAlbum, String> albumDao = AlbumDao.getInstance();
+            MusicAlbum album = null;
+            try {
+                album = albumDao.getById(productCode);
+            } catch (SQLException e) {
+                System.err.println("Can't get album " + productCode + " from DB");
+                e.printStackTrace();
+            }
 
             LineItem lineItem = new LineItem();
             lineItem.setAlbum(album); //Wrap album in LineItem object

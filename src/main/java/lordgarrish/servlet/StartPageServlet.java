@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 
 @WebServlet(urlPatterns = {"/catalog", "/news"})
@@ -36,8 +37,15 @@ public class StartPageServlet extends HttpServlet {
     private String showCatalog(HttpServletRequest req) {
         String url = "/catalog.jsp";
 
-        //Get albums from DB
-        List<MusicAlbum> albumsList = AlbumDB.selectAlbums();
+        AbstractDao<MusicAlbum, String> albumDao = AlbumDao.getInstance();
+        List<MusicAlbum> albumsList = null;
+        try {
+            albumsList = albumDao.getAll();
+        } catch (SQLException e) {
+            System.err.println("Can't get albums from DB");
+            e.printStackTrace();
+        }
+
         HttpSession session = req.getSession();
         session.setAttribute("albums", albumsList);
 

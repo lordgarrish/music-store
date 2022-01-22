@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -41,7 +42,15 @@ public class CheckoutServlet extends HttpServlet {
             sc.getRequestDispatcher(url).forward(req, resp);
         }
         else if(action.equals("addCard")) {
-            url = createOrder(req);
+            url = "/music_store_war_exploded/order";
+            Customer customer = createOrder(req);
+            AbstractDao<Customer, String> customerDao = CustomerDao.getInstance();
+            try {
+                customerDao.save(customer);
+            } catch (SQLException e) {
+                System.err.println("Can't save customer in database");
+                e.printStackTrace();
+            }
             resp.sendRedirect(url);
         }
     }
@@ -74,30 +83,28 @@ public class CheckoutServlet extends HttpServlet {
         return "/confirm.jsp";
     }
 
-    private String createOrder(HttpServletRequest req) {
+    private Customer createOrder(HttpServletRequest req) {
         String creditCardNumber = req.getParameter("creditCardNumber");
         String creditCardExpirationDate = req.getParameter("creditCardExpirationDate");
         String cvv = req.getParameter("cvv");
+        CreditCard card = new CreditCard(creditCardNumber, creditCardExpirationDate, cvv);
 
         HttpSession session = req.getSession();
         Customer customer = (Customer) session.getAttribute("customer");
         if(customer == null) {
             System.err.println("Customer not found in current session");
-            return "/error_page.jsp";
+            customer = new Customer();
         }
-        CreditCard card = new CreditCard();
-        card.setCreditCardNumber(creditCardNumber);
-        card.setCreditCardExpirationDate(creditCardExpirationDate);
-        card.setCvv(cvv);
 
         Cart cart = (Cart) session.getAttribute("cart");
         if(cart == null) {
             System.err.println("Cart not found in current session");
-            return "/error_page.jsp";
+            cart = new Cart();
         }
+
+        //Makes unique order ID from customer's last name, current date and a random number from 0 to 99
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMddHHmm");
-        //Makes order id from customer's last name, current date and a random number from 0 to 99
         String orderID = customer.getLastName() + "_" + now.format(formatter)+ "_" + (int) (Math.random() * 100);
         Order order = (Order) session.getAttribute("order");
         if(order == null || order.isEmptyOrder()) {
@@ -108,10 +115,6 @@ public class CheckoutServlet extends HttpServlet {
         customer.setCreditCard(card);
         customer.setOrder(order);
 
-        CustomerDB.addCustomer(customer);
-        CustomerDB.addCreditCard(customer);
-        CustomerDB.addOrder(customer);
-
-        return "/music_store_war_exploded/order";
+        return customer;
     }
 }

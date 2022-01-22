@@ -30,7 +30,7 @@
                         </c:forEach>
                     </table>
                 </div>
-                <p><b>Total price:</b> $<c:out value="${cart.totalPrice}"/></p><br>
+                <p><b>Total price:</b> $<c:out value="${order.totalPrice}"/></p><br>
                 <p><b>Shipping information:</b></p>
                 <p><b>First Name: </b><c:out value="${customer.firstName}"/>
                 <b> Last Name: </b><c:out value="${customer.lastName}"/></p>
