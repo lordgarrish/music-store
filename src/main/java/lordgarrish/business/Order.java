@@ -26,7 +26,7 @@ public class Order implements Serializable {
     }
 
     public List<LineItem> getItems() {
-        return items;
+        return new ArrayList<>(items);
     }
 
     public boolean isEmptyOrder() {

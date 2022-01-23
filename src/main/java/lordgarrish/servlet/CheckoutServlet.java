@@ -44,13 +44,8 @@ public class CheckoutServlet extends HttpServlet {
         else if(action.equals("addCard")) {
             url = "/music_store_war_exploded/order";
             Customer customer = createOrder(req);
-            AbstractDao<Customer, String> customerDao = CustomerDao.getInstance();
-            try {
-                customerDao.save(customer);
-            } catch (SQLException e) {
-                System.err.println("Can't save customer in database");
-                e.printStackTrace();
-            }
+            saveCustomer(customer);
+
             resp.sendRedirect(url);
         }
     }
@@ -116,5 +111,15 @@ public class CheckoutServlet extends HttpServlet {
         customer.setOrder(order);
 
         return customer;
+    }
+
+    private void saveCustomer(Customer customer) {
+        AbstractDao<Customer, String> customerDao = CustomerDao.getInstance();
+        try {
+            customerDao.save(customer);
+        } catch (SQLException e) {
+            System.err.println("Can't save customer in database");
+            e.printStackTrace();
+        }
     }
 }
