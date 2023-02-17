@@ -42,8 +42,22 @@ Finally, MySQL database serves as model, and for connecting to database server t
 file 'context.xml' in 'src/main/webapp/META-INF/' folder either by changing Datasource properties or by defining your own Datasource.<br/>
 The SQL script for the database: src/main/webapp/sql/db_script.sql<br/>
 
-<b>'music_store_db' database schema</b><br>
+<b>Database schema</b><br>
 [![FastPic.Ru](https://i115.fastpic.org/thumb/2021/1014/3f/febf08394ace89fbfff67bc66ba06a3f.jpeg)](https://fastpic.org/view/115/2021/1014/febf08394ace89fbfff67bc66ba06a3f.png.html)<br><br/>
-<b>Usage:</b><br>
-Clone this repository and open in IntelliJ Idea, choose Tomcat Server in Run/Debug Configuration and run it! Or you can manually build the project in Maven
-and deploy it in your Apache Tomcat folder.
+### Build and usage
+Build project using Maven:
+```
+mvn clean package
+```
+Deploying the WAR to Tomcat:
+1. Copy WAR file from `target/music-store-0.0.1-SNAPSHOT.war` to the `tomcat/webapps/` folder.
+2. From a terminal, navigate to the `tomcat/bin` folder and execute:
+- on Windows
+```
+catalina.bat run
+```
+- on Unix-based systems
+```
+catalina.sh run
+```
+3. Go to http://localhost:8080/
