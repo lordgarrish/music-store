@@ -50,7 +50,7 @@ Build project using Maven:
 mvn clean package
 ```
 Deploying the WAR to Tomcat:
-1. Copy WAR file from `target/music-store-0.0.1-SNAPSHOT.war` to the `tomcat/webapps/` folder.
+1. Copy WAR file from `target/music-store-1.0-SNAPSHOT.war` to the `tomcat/webapps/` folder.
 2. From a terminal, navigate to the `tomcat/bin` folder and execute:
 - on Windows
 ```
